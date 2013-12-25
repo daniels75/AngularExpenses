@@ -1,0 +1,4 @@
+AngularExpenses
+===============
+
+Angular Expenses application
