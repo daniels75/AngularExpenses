@@ -4,10 +4,10 @@ angular.module('angularExpensesApp')
   .controller('UserController', function ($scope) {
     $scope.name = "User Page";
 
-    $scope.chart = {
-      "type": "PieChart",
-      "displayed": true,
-      "cssStyle": "height:800px; width:800px",
+$scope.chart = {
+  "type": "ColumnChart",
+  "displayed": true,
+  "cssStyle": "height:600px; width:100%;",
   "data": {
     "cols": [
       {
@@ -104,23 +104,23 @@ angular.module('angularExpensesApp')
       }
     ]
   },
-      "options": {  
-        "dataType": "json",
-        "title": "User points",
-        "isStacked": "true",
-        "fill": 20,
-        "displayExactValues": true,
-        "vAxis": {
-          "title": "Points",
-          "gridlines": {
-            "count": 6
-          }
-        },
-        "hAxis": {
-          "title": "Date"
-        }
+  "options": {
+    "title": "Sales per month",
+    "isStacked": "true",
+    "fill": 20,
+    "displayExactValues": true,
+    "vAxis": {
+      "title": "Sales unit",
+      "gridlines": {
+        "count": 10
       }
+    },
+    "hAxis": {
+      "title": "Date"
     }
+  },
+  "formatters": {}
+}
 
 
   });
