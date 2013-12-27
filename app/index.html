@@ -36,7 +36,7 @@
         <div class="navbar-collapse collapse">
 
           <ul class="nav navbar-nav navbar-right">
-            <li ng-class="{active:isNavbarActive('home')}" ng-click="updateCurrentPage('home')" ng-init="count=0"><a ng-href="#">Home</a></li>
+            <li ng-class="{active:isNavbarActive('home')}" ng-click="updateCurrentPage('home')" ><a ng-href="#">Home</a></li>
             <li ng-class="{active:isNavbarActive('myroute')}" ng-click="updateCurrentPage('myroute')"><a ng-href="#myroute">MyRoute</a></li>
             <li ng-class="{active:isNavbarActive('user')}" ng-click="updateCurrentPage('user')"><a ng-href="#user">User</a></li>
           </ul>
@@ -59,11 +59,13 @@
 
   <hr />
 
+<!--
   <pre>$location.path() = {{mainRouteCtrl.$location.path()}}</pre>
   <pre>$route.current.templateUrl = {{mainRouteCtrl.$route.current.templateUrl}}</pre>
   <pre>$route.current.params = {{mainRouteCtrl.$route.current.params}}</pre>
   <pre>$route.current.scope.name = {{mainRouteCtrl.$route.current.scope.name}}</pre>
   <pre>$routeParams = {{mainRouteCtrl.$routeParams}}</pre>
+-->
 
 <div class="footer">
   <p>♥ from the Yeoman team</p>
@@ -101,6 +103,8 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/myroute.js"></script>
+        <script src="scripts/controllers/usercontroller.js"></script>
+        <script src="scripts/directives/ng-google-chart.js"></script>
         <!-- endbuild -->
 </body>
 </html>
