@@ -19,13 +19,55 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="angularExpensesApp">
+<body ng-app="angularExpensesApp" ng-controller="MyRouteController as mainRouteCtrl">
+
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
+    <!-- Fixed navbar -->
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="HeaderCtrl">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">AngularExpenses</a>
+        </div>
+        <div class="navbar-collapse collapse">
+
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-class="{active:isNavbarActive('home')}" ng-click="updateCurrentPage('home')" ng-init="count=0"><a ng-href="#">Home</a></li>
+            <li ng-class="{active:isNavbarActive('myroute')}" ng-click="updateCurrentPage('myroute')"><a ng-href="#myroute">MyRoute</a></li>
+            <li ng-class="{active:isNavbarActive('user')}" ng-click="updateCurrentPage('user')"><a ng-href="#user">User</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+      <!--
+    <div class="header">
+      <ul class="nav nav-pills pull-right">
+        <li class="active"><a ng-href="#">Home</a></li>
+        <li><a ng-href="#myroute">MyRoute</a></li>
+        <li><a ng-href="#user">User</a></li>
+      </ul>
+      <h3 class="text-muted">AngularExpenses</h3>
+    </div>
+  -->
+     
     <div class="container" ng-view=""></div>
+
+  <hr />
+
+  <pre>$location.path() = {{mainRouteCtrl.$location.path()}}</pre>
+  <pre>$route.current.templateUrl = {{mainRouteCtrl.$route.current.templateUrl}}</pre>
+  <pre>$route.current.params = {{mainRouteCtrl.$route.current.params}}</pre>
+  <pre>$route.current.scope.name = {{mainRouteCtrl.$route.current.scope.name}}</pre>
+  <pre>$routeParams = {{mainRouteCtrl.$routeParams}}</pre>
+
+<div class="footer">
+  <p>♥ from the Yeoman team</p>
+</div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -58,6 +100,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/myroute.js"></script>
         <!-- endbuild -->
 </body>
 </html>
