@@ -1,33 +1,24 @@
 'use strict';
 
-var appModule = angular.module('angularExpensesApp');
 
-
-appModule
-  .controller('MyrouteCtrl', function ($scope) {
-    
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+angular.module('angularExpensesApp')
+  .controller('ModalDemoCtrl', function ($scope, $modal, $log) {
+    $scope.selected = true;
+    $scope.name = "Test";
   }
 
 );
 
 
-
-appModule
-  .controller('ModalDemoCtrl', function ($scope, $modal, $log){
-  $scope.name1 = "TestDemo";
+/*
+angular.module('angularExpensesApp').controller('ModalDemoCtrl', function ($scope, $modal, $log) {
 
   $scope.items = ['item1', 'item2', 'item3'];
-  
-  
+
   $scope.open = function () {
 
     var modalInstance = $modal.open({
-      templateUrl: 'scripts/security/login/form.tpl.html',
+      templateUrl: 'myModalContent.html',
       controller: ModalInstanceCtrl,
       resolve: {
         items: function () {
@@ -42,16 +33,10 @@ appModule
       $log.info('Modal dismissed at: ' + new Date());
     });
   };
-
-
-
 }
-
-
 );
 
-
-var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+angular.module('angularExpensesApp').controller('ModalDemoCtrl', function ($scope, $modalInstance, items) {
 
   $scope.items = items;
   $scope.selected = {
@@ -65,8 +50,5 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-
-  $scope.cancelLogin = function() {
-    $modalInstance.dismiss('cancel');
-  }
-};
+});
+*/

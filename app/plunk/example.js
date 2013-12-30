@@ -1,33 +1,13 @@
-'use strict';
+angular.module('plunker', ['ui.bootstrap']);
 
-var appModule = angular.module('angularExpensesApp');
-
-
-appModule
-  .controller('MyrouteCtrl', function ($scope) {
-    
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  }
-
-);
-
-
-
-appModule
-  .controller('ModalDemoCtrl', function ($scope, $modal, $log){
-  $scope.name1 = "TestDemo";
+var ModalDemoCtrl = function ($scope, $modal, $log) {
 
   $scope.items = ['item1', 'item2', 'item3'];
-  
-  
+
   $scope.open = function () {
 
     var modalInstance = $modal.open({
-      templateUrl: 'scripts/security/login/form.tpl.html',
+      templateUrl: 'myModalContent.html',
       controller: ModalInstanceCtrl,
       resolve: {
         items: function () {
@@ -42,14 +22,7 @@ appModule
       $log.info('Modal dismissed at: ' + new Date());
     });
   };
-
-
-
-}
-
-
-);
-
+};
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
 
@@ -65,8 +38,4 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-
-  $scope.cancelLogin = function() {
-    $modalInstance.dismiss('cancel');
-  }
 };
