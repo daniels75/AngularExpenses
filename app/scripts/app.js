@@ -359,10 +359,12 @@ var LoginFormControllerTest = function($scope, $modalInstance, security, localiz
     $scope.user = {};
   };
 
+
   $scope.cancelLogin = function() {
-    //security.cancelLogin();
-    $modalInstance.dismiss('cancel');
+    security.cancelLogin($modalInstance);
+    //$modalInstance.dismiss('cancel');
   };
+
 };
 
 var ModalInstanceTestCtrl = function ($scope, $modalInstance) {
@@ -410,7 +412,9 @@ angular.module('security.service', [
 
   function closeLoginDialog(success) {
     if (loginDialog) {
-      loginDialog.close(success);
+      //loginDialog.close(success);
+      loginDialog.dismiss('cancel');
+
     }
   }
   function onLoginDialogClose(success) {
@@ -456,9 +460,10 @@ angular.module('security.service', [
     },
 
     // Give up trying to login and clear the retry queue
-    cancelLogin: function() {
-      closeLoginDialog(false);
-      redirect();
+    cancelLogin: function($modalInstance) {
+      $modalInstance.dismiss('cancel');
+      //closeLoginDialog($modalInstance, false);
+      //redirect();
     },
 
     // Logout the current user and redirect
