@@ -1,4 +1,28 @@
 
+angular.module('security.login.toolbar', [])
+
+// The loginToolbar directive is a reusable widget that can show login or logout buttons
+// and information the current authenticated user
+.directive('loginToolbar', ['security', function(security) {
+  var directive = {
+    templateUrl: 'scripts/security/login/toolbar.tpl.html',
+    restrict: 'E',
+    replace: true,
+    scope: true,
+    link: function($scope, $element, $attrs, $controller) {
+      $scope.isAuthenticated = security.isAuthenticated;
+      $scope.login = security.showLogin;
+      $scope.logout = security.logout;
+      $scope.$watch(function() {
+        return security.currentUser;
+      }, function(currentUser) {
+        $scope.currentUser = currentUser;
+      });
+    }
+  };
+  return directive;
+}]);
+
 angular.module('security.authorization', ['security.service'])
 
 // This service provides guard methods to support AngularJS routes.
@@ -122,29 +146,7 @@ var LoginFormController = function($scope, security, localizedMessages) {
 };
 
 angular.module('security.login', ['security.login.form', 'security.login.toolbar']);
-angular.module('security.login.toolbar', [])
 
-// The loginToolbar directive is a reusable widget that can show login or logout buttons
-// and information the current authenticated user
-.directive('loginToolbar', ['security', function(security) {
-  var directive = {
-    templateUrl: 'scripts/security/login/toolbar.tpl.html',
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    link: function($scope, $element, $attrs, $controller) {
-      $scope.isAuthenticated = security.isAuthenticated;
-      $scope.login = security.showLogin;
-      $scope.logout = security.logout;
-      $scope.$watch(function() {
-        return security.currentUser;
-      }, function(currentUser) {
-        $scope.currentUser = currentUser;
-      });
-    }
-  };
-  return directive;
-}]);
 angular.module('security.retryQueue', [])
 
 // This is a generic retry queue for security failures.  Each item is expected to expose two functions: retry and cancel.
@@ -233,11 +235,11 @@ angular.module('security.service', [
   // Login form dialog stuff
   var loginDialog = null;
   function openLoginDialog() {
-    /*
+    
     if ( loginDialog ) {
       throw new Error('Trying to open a dialog that is already open!');
     }
-    */
+    
     //loginDialog = $dialog.dialog();
     //loginDialog.open('scripts/security/login/form.tpl.html', 'LoginFormController').then(onLoginDialogClose);
 
@@ -248,6 +250,7 @@ angular.module('security.service', [
   function closeLoginDialog(success) {
     if (loginDialog) {
       loginDialog.close(success);
+      loginDialog = null;
     }
   }
   function onLoginDialogClose(success) {
