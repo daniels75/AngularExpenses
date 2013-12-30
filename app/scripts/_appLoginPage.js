@@ -101,41 +101,6 @@ angular.module('services.breadcrumbs').factory('breadcrumbs', ['$rootScope', '$l
 }]);
 
 
-angular.module('services.localizedMessages', []).factory('localizedMessages', ['$interpolate', 'I18N.MESSAGES', function ($interpolate, i18nmessages) {
-
-  var handleNotFound = function (msg, msgKey) {
-    return msg || '?' + msgKey + '?';
-  };
-
-  return {
-    get : function (msgKey, interpolateParams) {
-      var msg =  i18nmessages[msgKey];
-      if (msg) {
-        return $interpolate(msg)(interpolateParams);
-      } else {
-        return handleNotFound(msg, msgKey);
-      }
-    }
-  };
-}]);
-
-
-angular.module('angularExpensesApp').constant('I18N.MESSAGES', {
-  'errors.route.changeError':'Route change error',
-  'crud.user.save.success':"A user with id '{{id}}' was saved successfully.",
-  'crud.user.remove.success':"A user with id '{{id}}' was removed successfully.",
-  'crud.user.remove.error':"Something went wrong when removing user with id '{{id}}'.",
-  'crud.user.save.error':"Something went wrong when saving a user...",
-  'crud.project.save.success':"A project with id '{{id}}' was saved successfully.",
-  'crud.project.remove.success':"A project with id '{{id}}' was removed successfully.",
-  'crud.project.save.error':"Something went wrong when saving a project...",
-  'login.reason.notAuthorized':"You do not have the necessary access permissions.  Do you want to login as someone else?",
-  'login.reason.notAuthenticated':"You must be logged in to access this part of the application.",
-  'login.error.invalidCredentials': "Login failed.  Please check your credentials and try again.",
-  'login.error.serverError': "There was a problem with authenticating: {{exception}}."
-});
-
-
 
 
 
@@ -184,7 +149,6 @@ angular.module('security.authorization', ['security.service'])
     return service;
   }]
 });
-
 // Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 angular.module('security', [
   'security.service',
@@ -215,11 +179,11 @@ angular.module('security.interceptor', ['security.retryQueue'])
 .config(['$httpProvider', function($httpProvider) {
   $httpProvider.responseInterceptors.push('securityInterceptor');
 }]);
-angular.module('security.login.form', ['services.localizedMessages']);
+angular.module('security.login.form', ['services.localizedMessages'])
 
 // The LoginFormController provides the behaviour behind a reusable form to allow users to authenticate.
 // This controller and its template (login/form.tpl.html) are used in a modal dialog box by the security service.
-var LoginFormController = function($scope, security, localizedMessages) {
+.controller('LoginFormController', ['$scope', 'security', 'localizedMessages', function($scope, security, localizedMessages) {
   // The model for this form 
   $scope.user = {};
 
@@ -259,7 +223,7 @@ var LoginFormController = function($scope, security, localizedMessages) {
   $scope.cancelLogin = function() {
     security.cancelLogin();
   };
-};
+}]);
 
 angular.module('security.login', ['security.login.form', 'security.login.toolbar']);
 angular.module('security.login.toolbar', [])
@@ -354,6 +318,63 @@ angular.module('security.retryQueue', [])
   return service;
 }]);
 
+
+
+
+
+var LoginFormControllerTest = function($scope, $modalInstance, security, localizedMessages) {
+  // The model for this form 
+  $scope.user = {};
+
+  // Any error message from failing to login
+  $scope.authError = null;
+
+  // The reason that we are being asked to login - for instance because we tried to access something to which we are not authorized
+  // We could do something diffent for each reason here but to keep it simple...
+  $scope.authReason = null;
+  if ( security.getLoginReason() ) {
+    $scope.authReason = ( security.isAuthenticated() ) ?
+      localizedMessages.get('login.reason.notAuthorized') :
+      localizedMessages.get('login.reason.notAuthenticated');
+  }
+
+  // Attempt to authenticate the user specified in the form's model
+  $scope.login = function() {
+    // Clear any previous security errors
+    $scope.authError = null;
+
+    // Try to login
+    security.login($scope.user.email, $scope.user.password).then(function(loggedIn) {
+      if ( !loggedIn ) {
+        // If we get here then the login failed due to bad credentials
+        $scope.authError = localizedMessages.get('login.error.invalidCredentials');
+      }
+    }, function(x) {
+      // If we get here then there was a problem with the login request to the server
+      $scope.authError = localizedMessages.get('login.error.serverError', { exception: x });
+    });
+  };
+
+  $scope.clearForm = function() {
+    $scope.user = {};
+  };
+
+
+  $scope.cancelLogin = function() {
+    security.cancelLogin($modalInstance);
+    //$modalInstance.dismiss('cancel');
+  };
+
+};
+
+var ModalInstanceTestCtrl = function ($scope, $modalInstance) {
+
+
+  $scope.cancelLogin = function() {
+    $modalInstance.dismiss('cancel');
+
+  }
+};
 // Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 angular.module('security.service', [
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
@@ -361,8 +382,8 @@ angular.module('security.service', [
   'ui.bootstrap'     // Used to display the login form as a modal dialog.
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue',  '$modal',
-  function($http, $q, $location, queue, $modal) {
+.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal',
+ function($http, $q, $location, queue, $modal) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -372,22 +393,37 @@ angular.module('security.service', [
 
   // Login form dialog stuff
   var loginDialog = null;
+  var dialogWindow = null;
   function openLoginDialog() {
+    // FIXME!!!
     /*
     if ( loginDialog ) {
       throw new Error('Trying to open a dialog that is already open!');
     }
     */
-    //loginDialog = $dialog.dialog();
-    //loginDialog.open('scripts/security/login/form.tpl.html', 'LoginFormController').then(onLoginDialogClose);
+    loginDialog = $modal;
 
-    loginDialog = $modal.open({templateUrl: 'scripts/security/login/form.tpl.html',
-     controller: LoginFormController});
+    //loginDialog.open('scripts/security/login/form.tpl.html', 'LoginFormController').then(onLoginDialogClose);
+  
+    dialogWindow = loginDialog.open({templateUrl: 'scripts/security/login/form.tpl.html', controller: LoginFormControllerTest});
        
+    var test = "aaa";
   }
-  function closeLoginDialog(success) {
-    if (loginDialog) {
-      loginDialog.close(success);
+
+
+
+  function closeLoginDialog($modalInstance, success) {
+    if (dialogWindow) {
+      if (dialogWindow == $modalInstance){
+        var test  = "a1";
+      }
+      if (dialogWindow === $modalInstance){
+        var test  = "a2";
+      }      
+      dialogWindow.close(success);
+      //loginDialog.dismiss('cancel');
+      //$modalInstance.dismiss('cancel');
+
     }
   }
   function onLoginDialogClose(success) {
@@ -433,9 +469,10 @@ angular.module('security.service', [
     },
 
     // Give up trying to login and clear the retry queue
-    cancelLogin: function() {
-      closeLoginDialog(false);
-      redirect();
+    cancelLogin: function($modalInstance) {
+      //$modalInstance.dismiss('cancel');
+      closeLoginDialog($modalInstance, false);
+      //redirect();
     },
 
     // Logout the current user and redirect
@@ -474,3 +511,38 @@ angular.module('security.service', [
 
   return service;
 }]);
+
+
+angular.module('services.localizedMessages', []).factory('localizedMessages', ['$interpolate', 'I18N.MESSAGES', function ($interpolate, i18nmessages) {
+
+  var handleNotFound = function (msg, msgKey) {
+    return msg || '?' + msgKey + '?';
+  };
+
+  return {
+    get : function (msgKey, interpolateParams) {
+      var msg =  i18nmessages[msgKey];
+      if (msg) {
+        return $interpolate(msg)(interpolateParams);
+      } else {
+        return handleNotFound(msg, msgKey);
+      }
+    }
+  };
+}]);
+
+
+angular.module('angularExpensesApp').constant('I18N.MESSAGES', {
+  'errors.route.changeError':'Route change error',
+  'crud.user.save.success':"A user with id '{{id}}' was saved successfully.",
+  'crud.user.remove.success':"A user with id '{{id}}' was removed successfully.",
+  'crud.user.remove.error':"Something went wrong when removing user with id '{{id}}'.",
+  'crud.user.save.error':"Something went wrong when saving a user...",
+  'crud.project.save.success':"A project with id '{{id}}' was saved successfully.",
+  'crud.project.remove.success':"A project with id '{{id}}' was removed successfully.",
+  'crud.project.save.error':"Something went wrong when saving a project...",
+  'login.reason.notAuthorized':"You do not have the necessary access permissions.  Do you want to login as someone else?",
+  'login.reason.notAuthenticated':"You must be logged in to access this part of the application.",
+  'login.error.invalidCredentials': "Login failed.  Please check your credentials and try again.",
+  'login.error.serverError': "There was a problem with authenticating: {{exception}}."
+});
