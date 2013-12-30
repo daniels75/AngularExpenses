@@ -393,6 +393,7 @@ angular.module('security.service', [
 
   // Login form dialog stuff
   var loginDialog = null;
+  var dialogWindow = null;
   function openLoginDialog() {
     // FIXME!!!
     /*
@@ -404,16 +405,24 @@ angular.module('security.service', [
 
     //loginDialog.open('scripts/security/login/form.tpl.html', 'LoginFormController').then(onLoginDialogClose);
   
-    loginDialog.open({templateUrl: 'scripts/security/login/form.tpl.html', controller: LoginFormControllerTest});
+    dialogWindow = loginDialog.open({templateUrl: 'scripts/security/login/form.tpl.html', controller: LoginFormControllerTest});
        
+    var test = "aaa";
   }
 
 
 
-  function closeLoginDialog(success) {
-    if (loginDialog) {
-      //loginDialog.close(success);
-      loginDialog.dismiss('cancel');
+  function closeLoginDialog($modalInstance, success) {
+    if (dialogWindow) {
+      if (dialogWindow == $modalInstance){
+        var test  = "a1";
+      }
+      if (dialogWindow === $modalInstance){
+        var test  = "a2";
+      }      
+      dialogWindow.close(success);
+      //loginDialog.dismiss('cancel');
+      //$modalInstance.dismiss('cancel');
 
     }
   }
@@ -461,8 +470,8 @@ angular.module('security.service', [
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function($modalInstance) {
-      $modalInstance.dismiss('cancel');
-      //closeLoginDialog($modalInstance, false);
+      //$modalInstance.dismiss('cancel');
+      closeLoginDialog($modalInstance, false);
       //redirect();
     },
 
