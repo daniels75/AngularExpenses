@@ -46,6 +46,7 @@ var security = {
   login: function(req, res, next) {
     console.log(">>> A1");
     function authenticationFailed(err, user, info){
+      console.log(">>> A2");
       if (err) { return next(err); }
       if (!user) { return res.json(filterUser(user)); }
       req.logIn(user, function(err) {

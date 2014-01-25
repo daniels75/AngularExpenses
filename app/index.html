@@ -37,9 +37,14 @@
         <div class="navbar-collapse collapse">
 
           <ul class="nav navbar-nav navbar-right">
-            <li ng-class="{active:isNavbarActive('home')}" ng-click="updateCurrentPage('home')" ><a ng-href="#">Home</a></li>
-            <li ng-class="{active:isNavbarActive('myroute')}" ng-click="updateCurrentPage('myroute')"><a ng-href="#myroute">MyRoute</a></li>
-            <li ng-class="{active:isNavbarActive('user')}" ng-click="updateCurrentPage('user')"><a ng-href="#user">User</a></li>
+            <li ng-class="{active:isNavbarActive('home')}" ng-click="updateCurrentPage('home')" >
+              <a ng-href="/">Home</a></li>
+            <li ng-class="{active:isNavbarActive('myroute')}" ng-click="updateCurrentPage('myroute')">
+              <a ng-href="myroute">MyRoute</a></li>
+            <li ng-class="{active:isNavbarActive('user')}" ng-click="updateCurrentPage('user')">
+              <a ng-href="user">User</a></li>
+            <li ng-class="{active:isNavbarActive('login')}" ng-click="updateCurrentPage('login')">
+              <a ng-href="login">Login</a></li>            
              <login-toolbar></login-toolbar>
           </ul>
                 
@@ -128,6 +133,7 @@
         <script src="scripts/security/login/LoginFormController.js"></script>
         <script src="scripts/security/login/login.js"></script>
       -->
+        <script src="scripts/controllers/login.js"></script>
         <!-- endbuild -->
 </body>
 </html>

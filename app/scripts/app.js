@@ -24,6 +24,10 @@ angular.module('angularExpensesApp', [
         templateUrl: 'views/user.html',
         controller: 'UserController'
       })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -64,6 +68,11 @@ angular.module('angularExpensesApp').controller('HeaderCtrl', ['$scope', '$locat
     };
 
 
+}]);
+
+angular.module('angularExpensesApp').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+  $locationProvider.html5Mode(true);
+  $routeProvider.otherwise({redirectTo:'/'});
 }]);
 
 angular.module('services.breadcrumbs', []);

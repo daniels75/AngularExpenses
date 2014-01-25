@@ -2,7 +2,7 @@ var express = require('express');
 
 exports.addRoutes = function(app, config) {
   // Serve up the favicon
-  console.log('>>>> Dist folder: ' + config.server.distFolder);
+  console.log('>>>> config.server.distFolder: ' + config.server.distFolder);
   console.log('>>>> config.server.staticUrl: ' + config.server.staticUrl);
   
   app.use(express.favicon(config.server.distFolder + '/favicon.ico'));
